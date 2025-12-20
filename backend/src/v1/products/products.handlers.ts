@@ -61,7 +61,6 @@ export const getById: AppRouteHandler<GetByIdRoute> = async (c) => {
 };
 
 export const patch: AppRouteHandler<PatchRoute> = async (c) => {
-	console.log(c);
 	const { id } = c.req.valid("param");
 	const payload = c.req.valid("json");
 
