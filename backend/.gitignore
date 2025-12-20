@@ -8,6 +8,9 @@
 .idea/usage.statistics.xml
 .idea/shelf
 
+# compiled output
+dist/
+
 # deps
 node_modules/
 
