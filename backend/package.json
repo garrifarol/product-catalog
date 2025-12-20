@@ -10,7 +10,7 @@
 		"db:migrate": "npm run drizzle:generate && npm run drizzle:migrate",
 		"dev": "npm run db:up && npm run db:migrate && tsx watch src/index.ts",
 		"build": "tsc",
-		"start": "node dist/index.js",
+		"start": "node dist/src/index.js",
 		"test": "vitest"
 	},
 	"dependencies": {
