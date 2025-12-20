@@ -26,6 +26,5 @@ app.doc("/doc", {
 app.get("/scalar", Scalar({ theme: "elysiajs", url: "/doc" }));
 
 app.route("v1", v1);
-console.log("NODE_ENV:", env.NODE_ENV);
-console.log("DATABASE_URL:", env.DATABASE_URL?.slice(0, 20) + "..."); 
+
 export default app;
