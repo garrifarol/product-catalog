@@ -9,7 +9,7 @@ const app = createApp();
 app.use(
   '/v1/*',
   cors({
-    origin: ['http://localhost:4200', 'https://product-catalog-frontend-a6pa.onrender.com'],
+    origin: ['http://localhost:4200', 'https://product-catalog-frontend-u1vp.onrender.com'],
     allowMethods: ['GET', 'POST', 'PATCH', 'DELETE'],
     allowHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
