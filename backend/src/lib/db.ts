@@ -4,7 +4,8 @@ import env from "../env.js";
 import { schema } from "../db/schemas/index.ts";
 
 const pool = new Pool({
-	connectionString: env.DATABASE_URL
+	connectionString: env.DATABASE_URL,
+	ssl: env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false
 });
 const db = drizzle(pool, { schema, casing: "snake_case" });
 
