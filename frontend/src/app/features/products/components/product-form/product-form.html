@@ -1,0 +1,35 @@
+<form class="product-form" [formGroup]="form" (ngSubmit)="submit()">
+  <h2 class="text-xl mb-6">{{ isEditMode() ? 'Edit Product' : 'Add Product' }}</h2>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Product Name</mat-label>
+    <input matInput formControlName="name" />
+    <mat-error>Name is required (min 3 characters)</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Price (₱)</mat-label>
+    <input matInput type="number" formControlName="price" />
+    <mat-error>Price must be greater than 0.01</mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Category</mat-label>
+    <mat-select formControlName="categoryId">
+      @for (category of categories(); track category.id) {
+      <mat-option [value]="category.id">
+        {{ category.name }}
+      </mat-option>
+      }
+    </mat-select>
+    <mat-error>Category is required</mat-error>
+  </mat-form-field>
+
+  <div class="mt-4">
+    <button matButton="filled" color="primary" type="submit">
+      {{ isEditMode() ? 'Update' : 'Create' }}
+    </button>
+
+    <button matButton="filled" type="button" class="accent-btn" (click)="cancel()">Cancel</button>
+  </div>
+</form>

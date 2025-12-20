@@ -1,0 +1,14 @@
+services:
+  product_catalog_db:
+    image: postgres:17
+    ports:
+      - "5432:5432"
+    volumes:
+      - product_catalog_db_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=product_catalog
+
+volumes:
+  product_catalog_db_data:
