@@ -3,6 +3,7 @@ import v1 from "./v1/index.router.js";
 import { Scalar } from "@scalar/hono-api-reference";
 import packageJson from "../package.json" with { type: "json" };
 import { cors } from "hono/cors";
+import env from "./env.ts";
 
 const app = createApp();
 app.use(
@@ -25,5 +26,6 @@ app.doc("/doc", {
 app.get("/scalar", Scalar({ theme: "elysiajs", url: "/doc" }));
 
 app.route("v1", v1);
-console.log('DATABASE_URL exists:', !!process.env.DATABASE_URL);
+console.log("NODE_ENV:", env.NODE_ENV);
+console.log("DATABASE_URL:", env.DATABASE_URL?.slice(0, 20) + "..."); 
 export default app;
