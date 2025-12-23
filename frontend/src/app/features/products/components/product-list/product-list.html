@@ -1,7 +1,10 @@
-<div class="flex justify-between items-center mb-4">
-  <button matButton="filled" routerLink="/products/new">Add Product</button>
-  <div class="filters">
-    <mat-form-field appearance="outline">
+<div class="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+  <button matButton="filled" routerLink="/products/new" class="w-full sm:w-auto">
+    Add Product
+  </button>
+
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+    <mat-form-field appearance="outline" class="w-full sm:w-56">
       <mat-label>Category</mat-label>
       <mat-select [value]="selectedCategory()" (selectionChange)="onCategoryChange($event.value)">
         @for (category of categories(); track category.id) {
@@ -12,42 +15,47 @@
       </mat-select>
     </mat-form-field>
 
-    <button matButton color="primary" (click)="resetFilter()">Reset Filter</button>
+    <button matButton class="w-full sm:w-auto" (click)="resetFilter()">Reset Filter</button>
   </div>
 </div>
 
-<table mat-table [dataSource]="products()">
-  <ng-container matColumnDef="product">
-    <th mat-header-cell *matHeaderCellDef>Product</th>
-    <td mat-cell *matCellDef="let product">
-      {{ product.name }}
-    </td>
-  </ng-container>
+<div class="overflow-x-auto">
+  <table mat-table [dataSource]="products()" class="min-w-160 w-full">
+    <ng-container matColumnDef="product">
+      <th mat-header-cell *matHeaderCellDef>Product</th>
+      <td mat-cell *matCellDef="let product">
+        {{ product.name }}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="price">
-    <th mat-header-cell *matHeaderCellDef>Price</th>
-    <td mat-cell *matCellDef="let product">
-      {{ product.price | currency : 'PHP' : 'symbol' : '1.2-2' }}
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="price">
+      <th mat-header-cell *matHeaderCellDef>Price</th>
+      <td mat-cell *matCellDef="let product">
+        {{ product.price | currency : 'PHP' : 'symbol' : '1.2-2' }}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="category">
-    <th mat-header-cell *matHeaderCellDef>Category</th>
-    <td mat-cell *matCellDef="let product">
-      {{ product.category.name }}
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="category">
+      <th mat-header-cell *matHeaderCellDef>Category</th>
+      <td mat-cell *matCellDef="let product">
+        {{ product.category.name }}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="actions">
-    <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let product">
-      <button matButton="filled" [routerLink]="['/products', product.id, 'edit']">Edit</button>
-      <button matButton="filled" class="warn-btn" (click)="deleteProduct(product.id)">
-        Delete
-      </button>
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let product">
+        <div class="flex gap-2">
+          <button matButton="filled" [routerLink]="['/products', product.id, 'edit']">Edit</button>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-</table>
+          <button matButton="filled" class="warn-btn" (click)="deleteProduct(product.id)">
+            Delete
+          </button>
+        </div>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>

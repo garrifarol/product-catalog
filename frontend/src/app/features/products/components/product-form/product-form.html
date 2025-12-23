@@ -1,35 +1,41 @@
-<form class="product-form" [formGroup]="form" (ngSubmit)="submit()">
-  <h2 class="text-xl mb-6">{{ isEditMode() ? 'Edit Product' : 'Add Product' }}</h2>
+<form [formGroup]="form" (ngSubmit)="submit()" class="w-full max-w-2xl mx-auto px-4 sm:px-6">
+  <h2 class="text-xl mb-6 text-center sm:text-left">
+    {{ isEditMode() ? 'Edit Product' : 'Add Product' }}
+  </h2>
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Product Name</mat-label>
-    <input matInput formControlName="name" />
-    <mat-error>Name is required (min 3 characters)</mat-error>
-  </mat-form-field>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-4">
+    <mat-form-field appearance="outline" class="w-full md:col-span-2">
+      <mat-label>Product Name</mat-label>
+      <input matInput formControlName="name" />
+      <mat-error>Name is required (min 3 characters)</mat-error>
+    </mat-form-field>
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Price (₱)</mat-label>
-    <input matInput type="number" formControlName="price" />
-    <mat-error>Price must be greater than 0.01</mat-error>
-  </mat-form-field>
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Price (₱)</mat-label>
+      <input matInput type="number" formControlName="price" />
+      <mat-error>Price must be greater than 0.01</mat-error>
+    </mat-form-field>
 
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Category</mat-label>
-    <mat-select formControlName="categoryId">
-      @for (category of categories(); track category.id) {
-      <mat-option [value]="category.id">
-        {{ category.name }}
-      </mat-option>
-      }
-    </mat-select>
-    <mat-error>Category is required</mat-error>
-  </mat-form-field>
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Category</mat-label>
+      <mat-select formControlName="categoryId">
+        @for (category of categories(); track category.id) {
+        <mat-option [value]="category.id">
+          {{ category.name }}
+        </mat-option>
+        }
+      </mat-select>
+      <mat-error>Category is required</mat-error>
+    </mat-form-field>
+  </div>
 
-  <div class="mt-4">
-    <button matButton="filled" color="primary" type="submit">
-      {{ isEditMode() ? 'Update' : 'Create' }}
+  <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end sm:gap-4">
+    <button matButton="filled" type="button" class="w-full sm:w-auto accent-btn" (click)="cancel()">
+      Cancel
     </button>
 
-    <button matButton="filled" type="button" class="accent-btn" (click)="cancel()">Cancel</button>
+    <button matButton="filled" type="submit" class="w-full sm:w-auto">
+      {{ isEditMode() ? 'Update' : 'Create' }}
+    </button>
   </div>
 </form>
