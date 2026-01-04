@@ -1,8 +1,10 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { CreateUpdateProduct, Product } from '../models/products.model';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { Category } from '../../categories/models/categories.model';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +13,7 @@ export class ProductsService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/v1/products`;
 
-  getProducts(categoryId?: string): Observable<Product[]> {
+  getProducts(categoryId: string = ''): Observable<Product[]> {
     const url = categoryId ? `${this.apiUrl}?categoryId=${categoryId}` : this.apiUrl;
     return this.http.get<Product[]>(url);
   }
