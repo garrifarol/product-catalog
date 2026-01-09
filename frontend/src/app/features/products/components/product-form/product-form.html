@@ -1,4 +1,4 @@
-<form [formGroup]="form" (ngSubmit)="submit()" class="w-full max-w-2xl mx-auto px-4 sm:px-6">
+<form [formGroup]="form" (ngSubmit)="confirmSubmit()" class="w-full max-w-2xl mx-auto px-4 sm:px-6">
   <h2 class="text-xl mb-6 text-center sm:text-left">
     {{ isEditMode() ? 'Edit Product' : 'Add Product' }}
   </h2>
@@ -12,7 +12,7 @@
 
     <mat-form-field appearance="outline" class="w-full">
       <mat-label>Price (₱)</mat-label>
-      <input matInput type="number" formControlName="price" />
+      <input matInput type="number" min="0" formControlName="price" />
       <mat-error>Price must be greater than 0.01</mat-error>
     </mat-form-field>
 
@@ -30,9 +30,7 @@
   </div>
 
   <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end sm:gap-4">
-    <button matButton="filled" type="button" class="w-full sm:w-auto accent-btn" (click)="cancel()">
-      Cancel
-    </button>
+    <button matButton type="button" class="w-full sm:w-auto" (click)="cancel()">Cancel</button>
 
     <button matButton="filled" type="submit" class="w-full sm:w-auto">
       {{ isEditMode() ? 'Update' : 'Create' }}

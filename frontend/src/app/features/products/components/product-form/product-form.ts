@@ -1,6 +1,6 @@
-import { Component, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ProductsService } from '../../services/products-service';
 import { CategoriesService } from '../../../categories/services/categories-service';
 import { Category } from '../../../categories/models/categories.model';
@@ -9,7 +9,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { Product } from '../../models/products.model';
-import { Snackbar } from '../../../../shared/services/snackbar';
+import { Snackbar } from '../../../../shared/services/snackbar/snackbar';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { of } from 'rxjs';
+import { ConfirmDialog } from '../../../../shared/services/confirm-dialog/confirm-dialog';
 
 @Component({
   selector: 'app-product-form',
@@ -24,16 +27,25 @@ import { Snackbar } from '../../../../shared/services/snackbar';
   styleUrl: './product-form.css',
 })
 export class ProductForm implements OnInit {
-  private route = inject(ActivatedRoute);
+  id = input<string>('');
   private router = inject(Router);
   private fb = inject(FormBuilder);
   private productsService = inject(ProductsService);
   private categoriesService = inject(CategoriesService);
   private snackbarService = inject(Snackbar);
+  private confirmDialogService = inject(ConfirmDialog);
 
-  product = signal<Product | null>(null);
-  categories = signal<Category[]>([]);
-  isEditMode = signal(false);
+  private productResource = rxResource({
+    params: () => ({ id: this.id() }),
+    stream: ({ params }) => {
+      if (!params.id) return of(null);
+      return this.productsService.getProductById(params.id);
+    },
+  });
+
+  product = this.productResource.value;
+  categories = this.categoriesService.categories;
+  isEditMode = computed(() => !!this.id());
 
   form = this.fb.nonNullable.group({
     name: ['', [Validators.required, Validators.minLength(1)]],
@@ -41,50 +53,50 @@ export class ProductForm implements OnInit {
     categoryId: ['', Validators.required],
   });
 
-  ngOnInit() {
-    this.loadCategories();
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.isEditMode.set(true);
-      this.loadProduct(id);
-    } else {
-      this.isEditMode.set(false);
+  redirectIfNotFoundEffect = effect(() => {
+    if (this.id() && this.productResource.error()) {
+      this.snackbarService.open('Product not found');
+      this.router.navigate(['/products']);
     }
-  }
+  });
 
-  loadProduct(id: string) {
-    this.productsService.getProductById(id).subscribe({
-      next: (product) => {
-        this.product.set(product);
-        this.form.patchValue({
-          name: product.name,
-          price: product.price,
-          categoryId: product.category.id,
-        });
-      },
-      error: () => {
-        this.snackbarService.open('Failed to load product');
-      },
+  patchEffect = effect(() => {
+    const product = this.product();
+    if (!product) return;
+    this.form.patchValue({
+      name: product?.name,
+      price: product?.price,
+      categoryId: product?.category.id,
     });
+  });
+
+  ngOnInit() {
+    this.categoriesService.searchCategories();
   }
 
-  loadCategories() {
-    this.categoriesService.getCategories().subscribe({
-      next: (data) => {
-        this.categories.set(data);
-      },
-      error: () => {
-        this.snackbarService.open('Failed to load categories');
-      },
-    });
-  }
-
-  submit() {
+  confirmSubmit() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
 
+    this.confirmDialogService
+      .confirm({
+        title: this.isEditMode() ? `Update ${this.product()?.name}?` : 'Create Product?',
+        message: this.isEditMode()
+          ? 'Are you sure you want to update this product?'
+          : 'Are you sure you want to create this product?',
+        confirmText: this.isEditMode() ? 'Update' : 'Create',
+        cancelText: 'Cancel',
+      })
+      .subscribe((isConfirmed) => {
+        if (isConfirmed) {
+          this.submit();
+        }
+      });
+  }
+
+  submit() {
     const payload = this.form.getRawValue();
 
     const request$ = this.isEditMode()

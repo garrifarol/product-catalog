@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { bootstrapApplication } from '@angular/platform-browser';
+import { NotFound } from './shared/components/not-found/not-found';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'products', pathMatch: 'full' },
@@ -17,5 +18,9 @@ export const routes: Routes = [
     path: 'products/:id/edit',
     loadComponent: () =>
       import('./features/products/components/product-form/product-form').then((m) => m.ProductForm),
+  },
+  {
+    path: '**',
+    component: NotFound,
   },
 ];

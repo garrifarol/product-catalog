@@ -16,3 +16,17 @@
   text-align: right;
   white-space: nowrap;
 }
+
+.table-loader {
+  position: absolute;
+  top: 52px;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+.disabled-row {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+}
